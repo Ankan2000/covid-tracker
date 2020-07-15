@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coronavirus Tracker</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header__logo">
+                <img src="./assets/logo.png" alt="logo">
+            </div>
+            <select name="country" id="country" class="header__selection">
+                <option value="global" selected>--Global--</option>
+            </select>
+        </header>
+        <main class="flex-container">
+            <div class="chart">
+                <canvas id="visualChart" width="100%" height="100%"></canvas>
+            </div>
+            <aside class="feed">
+                <div class="card card--info">
+                    <div class="card__body">
+                        <div class="card__title">
+                            <h3>Total number of infections</h3>
+                        </div>
+                        <div class="card__number">
+                            <h1>123456789</h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="card card--success">
+                    <div class="card__body">
+                        <div class="card__title">
+                            <h3>Total number of recoveries</h3>
+                        </div>
+                        <div class="card__number">
+                            <h1>1234567</h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="card card--danger">
+                    <div class="card__body">
+                        <div class="card__title">
+                            <h3>Total number of deaths</h3>
+                        </div>
+                        <div class="card__number">
+                            <h1>123456</h1>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </main>
+    </div>
+</body>
+
+</html>
