@@ -14,9 +14,16 @@
             <div class="header__logo">
                 <img src="./assets/logo.png" alt="logo">
             </div>
-            <select name="country" id="country" class="header__selection">
+
+            <!-- <img id="firstVirus" class="virus" src="./assets/blue-virus.png" alt="corona virus" width="80px"
+                height="80px">
+            <img id="secondVirus" class="virus" src="./assets/blue-virus.png" alt="corona virus" width="80px"
+                height="80px"> -->
+
+            <select name="country" id="countrySelector" class="header__selection">
                 <option value="global" selected>--Global--</option>
             </select>
+
         </header>
         <main class="flex-container">
             <div class="chart">
@@ -56,6 +63,11 @@
             </aside>
         </main>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"
+        integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg=="
+        crossorigin="anonymous" defer></script>
+    <script src="./js/app.js"></script>
+
 </body>
 
 </html>
