@@ -1,4 +1,10 @@
 const select = document.querySelector("#countrySelector");
+const chartBlock = document.querySelector('#visualChart').getContext('2d');
+
+const today = new Date();
+const currentMonth = (today.getMonth() + 1) < 10 ? `0${(today.getMonth() + 1)}` : (today.getMonth() + 1);
+const startDate = today.getFullYear() + "-0" + (currentMonth - 6) + "-" + today.getDate();
+const endDate = today.getFullYear() + "-" + currentMonth + "-" + today.getDate();
 
 const api = "https://api.coronatracker.com";
 
@@ -24,13 +30,48 @@ const setOptions = async () => {
 
 }
 
+const updateChart = (infections, deaths, recovered, date) => {
+    const chart = new Chart(chartBlock, {
+        type: 'line',
+        data: {
+            labels: date,
+            datasets: [
+                {
+                    label: "Confirmed",
+                    data: infections,
+                    backgroundColor: 'rgba(0, 0, 255, 0.5)',
+                    borderColor: 'rgba(0, 0, 255, 1.0)'
+                },
+                {
+                    label: "Deaths",
+                    data: deaths,
+                    backgroundColor: 'rgba(255, 0, 0, 0.5)',
+                    borderColor: 'rgba(255, 0, 0, 1.0)'
+                }
+            ]
+        },
+        options: {
+            response: true,
+            maintainAspectRatio: false
+        }
+    })
+
+}
+
 fetchTimelineData = async (event) => {
     try {
-        const response = await fetch(`${api}/v3/analytics/trend/country?countryCode=${event.target.value}&startDate=2020-03-01&endDate=2020-07-16`)
+        const response = await fetch(`${api}/v3/analytics/trend/country?countryCode=${event.target.value}&startDate=${startDate}&endDate=${endDate}`)
         const data = await response.json();
-        console.log(data.length);
-    } catch (err) {
+        const infectionsData = data.map(item => item.total_confirmed);
+        const deathData = data.map(item => item.total_deaths);
+        const recoveredData = data.map(item => item.total_recovered);
+        const date = data.map(item => new Date(item.last_updated).toISOString().split('T')[0])
 
+        // console.log(deathData);
+
+        updateChart(infectionsData, deathData, recoveredData, date);
+    } catch (err) {
+        console.error(err);
     }
 }
 
