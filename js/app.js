@@ -31,6 +31,7 @@ const setOptions = async () => {
 }
 
 const updateChart = (infections, deaths, recovered, date) => {
+    console.log(deaths[deaths.length - 1]);
     const chart = new Chart(chartBlock, {
         type: 'line',
         data: {
@@ -39,14 +40,23 @@ const updateChart = (infections, deaths, recovered, date) => {
                 {
                     label: "Confirmed",
                     data: infections,
-                    backgroundColor: 'rgba(0, 0, 255, 0.5)',
-                    borderColor: 'rgba(0, 0, 255, 1.0)'
+                    backgroundColor: '#cce8ff',
+                    borderColor: '#008cff',
+                    pointRadius: 0,
+                },
+                {
+                    label: "Recovered",
+                    data: recovered,
+                    backgroundColor: '#dfffd6',
+                    borderColor: '#25aa00',
+                    pointRadius: 0,
                 },
                 {
                     label: "Deaths",
                     data: deaths,
-                    backgroundColor: 'rgba(255, 0, 0, 0.5)',
-                    borderColor: 'rgba(255, 0, 0, 1.0)'
+                    backgroundColor: '#fdc5c5',
+                    borderColor: '#ff0000',
+                    pointRadius: 0,
                 }
             ]
         },
