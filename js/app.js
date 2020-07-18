@@ -50,7 +50,47 @@ const updateCards = (confirmed, deaths, recovered) => {
     countUp.start();
 }
 
+const updateChart = (infections, deaths, recovered, date) => {
+    const chart = new Chart(chartBlock, {
+        type: 'line',
+        data: {
+            labels: date,
+            datasets: [
+                {
+                    label: "Confirmed",
+                    data: infections,
+                    backgroundColor: '#cce8ff',
+                    borderColor: '#008cff',
+                    pointRadius: 0,
+                },
+                {
+                    label: "Recovered",
+                    data: recovered,
+                    backgroundColor: '#dfffd6',
+                    borderColor: '#25aa00',
+                    pointRadius: 0,
+                },
+                {
+                    label: "Deaths",
+                    data: deaths,
+                    backgroundColor: '#fdc5c5',
+                    borderColor: '#ff0000',
+                    pointRadius: 0,
+                }
+            ]
+        },
+        options: {
+            response: true,
+            maintainAspectRatio: false
+        }
+    })
 
+    countUp = new CountUp(deathsNumberCard, deaths);
+    countUp.start();
+
+    countUp = new CountUp(recoveryNumberCard, recovered);
+    countUp.start();
+}
 
 const fetchTimelineData = async (event) => {
     try {
