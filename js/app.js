@@ -1,5 +1,4 @@
 import { CountUp } from "./countUp.min.js";
-import { createChart } from "./charts";
 
 const select = document.querySelector("#countrySelector");
 const confirmedNumberCard = document.querySelector("#confirmed");
@@ -35,8 +34,6 @@ const setOptions = async () => {
         options.text = item.countryName;
         select.add(options);
     })
-
-    chart = createChart();
 }
 
 const updateCards = (confirmed, deaths, recovered) => {
@@ -51,7 +48,11 @@ const updateCards = (confirmed, deaths, recovered) => {
 }
 
 const updateChart = (infections, deaths, recovered, date) => {
-    const chart = new Chart(chartBlock, {
+    if (chart != undefined) {
+        chart.destroy();
+    }
+
+    chart = new Chart(chartBlock, {
         type: 'line',
         data: {
             labels: date,
@@ -84,12 +85,6 @@ const updateChart = (infections, deaths, recovered, date) => {
             maintainAspectRatio: false
         }
     })
-
-    countUp = new CountUp(deathsNumberCard, deaths);
-    countUp.start();
-
-    countUp = new CountUp(recoveryNumberCard, recovered);
-    countUp.start();
 }
 
 const fetchTimelineData = async (event) => {
