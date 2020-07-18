@@ -55,21 +55,18 @@ const updateChart = (infections, deaths, recovered, date) => {
                 {
                     label: "Confirmed",
                     data: infections,
-                    backgroundColor: '#cce8ff',
                     borderColor: '#008cff',
                     pointRadius: 0,
                 },
                 {
                     label: "Recovered",
                     data: recovered,
-                    backgroundColor: '#dfffd6',
                     borderColor: '#25aa00',
                     pointRadius: 0,
                 },
                 {
                     label: "Deaths",
                     data: deaths,
-                    backgroundColor: '#fdc5c5',
                     borderColor: '#ff0000',
                     pointRadius: 0,
                 }
