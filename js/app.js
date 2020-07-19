@@ -4,6 +4,7 @@ const select = document.querySelector("#countrySelector");
 const confirmedNumberCard = document.querySelector("#confirmed");
 const recoveryNumberCard = document.querySelector("#recovery");
 const deathsNumberCard = document.querySelector("#deaths");
+const loader = document.querySelector(".line-loader")
 const chartBlock = document.querySelector('#visualChart').getContext('2d');
 
 const today = new Date();
@@ -13,20 +14,44 @@ const endDate = today.getFullYear() + "-" + currentMonth + "-" + today.getDate()
 
 const api = "https://api.coronatracker.com";
 
-let chart;
+let chart, countUp;
 
-const fetchData = async () => {
+const fetchOptions = async () => {
     try {
-        const response = await fetch(`${api}/v2/analytics/country?limit=200`);
+        const response = await fetch(`${api}/v2/analytics/country`);
         const data = await response.json();
-        return data
+        return data;
     } catch (err) {
         console.error(err);
     }
 }
 
+const fetchGlobalData = async () => {
+    try {
+        const response = await fetch(`${api}/v3/stats/worldometer/global`);
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+const setInitialCards = async () => {
+    let cardData = await fetchGlobalData();
+
+    countUp = new CountUp(confirmedNumberCard, cardData.totalConfirmed);
+    countUp.start();
+
+    countUp = new CountUp(recoveryNumberCard, cardData.totalRecovered);
+    countUp.start();
+
+    countUp = new CountUp(deathsNumberCard, cardData.totalDeaths);
+    countUp.start();
+
+}
+
 const setOptions = async () => {
-    let optionData = await fetchData();
+    let optionData = await fetchOptions();
 
     optionData.forEach(item => {
         let options = document.createElement("option");
@@ -37,7 +62,7 @@ const setOptions = async () => {
 }
 
 const updateCards = (confirmed, deaths, recovered) => {
-    let countUp = new CountUp(confirmedNumberCard, confirmed);
+    countUp = new CountUp(confirmedNumberCard, confirmed);
     countUp.start();
 
     countUp = new CountUp(deathsNumberCard, deaths);
@@ -86,10 +111,11 @@ const updateChart = (infections, deaths, recovered, date) => {
 
 const fetchTimelineData = async (event) => {
     try {
+        loader.classList.add("loading");
         const response = await fetch(`${api}/v3/analytics/trend/country?countryCode=${event.target.value}&startDate=${startDate}&endDate=${endDate}`)
         const data = await response.json();
-        if (data == null) {
-            confirmedNumberCard.innerHTML = "loading"
+        if (data) {
+            loader.classList.remove("loading")
         }
         const infectionsData = data.map(item => item.total_confirmed);
         const deathData = data.map(item => item.total_deaths);
@@ -110,4 +136,9 @@ const fetchTimelineData = async (event) => {
 
 select.addEventListener('change', fetchTimelineData)
 
-window.addEventListener("load", setOptions);
+const initialLoad = () => {
+    setOptions();
+    setInitialCards();
+}
+
+window.addEventListener("load", initialLoad);
