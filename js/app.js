@@ -80,7 +80,7 @@ const setGlobalChart = async () => {
     })
 }
 
-const setInitialCards = async () => {
+const setGlobalCards = async () => {
     let cardData = await fetchGlobalData();
 
     countUp = new CountUp(confirmedNumberCard, cardData.totalConfirmed);
@@ -156,7 +156,8 @@ const updateChart = (infections, deaths, recovered, date) => {
 const fetchTimelineData = async (event) => {
     try {
         loader.classList.add("loading");
-        const response = await fetch(`${api}/v3/analytics/trend/country?countryCode=${event.target.value}&startDate=${startDate}&endDate=${endDate}`)
+        let countryCode = event.target.value;
+        const response = await fetch(`${api}/v3/analytics/trend/country?countryCode=${countryCode}&startDate=${startDate}&endDate=${endDate}`)
         const data = await response.json();
         if (data) {
             loader.classList.remove("loading")
@@ -171,7 +172,12 @@ const fetchTimelineData = async (event) => {
         const totalDeaths = deathData[deathData.length - 1];
         const totalRecovered = recoveredData[recoveredData.length - 1];
 
-        updateChart(infectionsData, deathData, recoveredData, date);
+        if (countryCode === "global") {
+            setGlobalCards();
+            setGlobalChart();
+        } else {
+            updateChart(infectionsData, deathData, recoveredData, date);
+        }
         updateCards(totalConfirmed, totalDeaths, totalRecovered);
     } catch (err) {
         console.error(err);
@@ -182,7 +188,7 @@ select.addEventListener('change', fetchTimelineData)
 
 const initialLoad = () => {
     setOptions();
-    setInitialCards();
+    setGlobalCards();
     setGlobalChart();
 }
 
