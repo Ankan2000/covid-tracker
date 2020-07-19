@@ -36,6 +36,50 @@ const fetchGlobalData = async () => {
     }
 }
 
+const fetchGlobalTimelineData = async () => {
+    try {
+        const response = await fetch("https://covid19.mathdro.id/api/daily");
+        const data = await response.json();
+
+        return data;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+const setGlobalChart = async () => {
+    if (chart != undefined) {
+        chart.destroy();
+    }
+
+    const chartData = await fetchGlobalTimelineData();
+
+    chart = new Chart(chartBlock, {
+        type: 'line',
+        data: {
+            labels: chartData.map(data => data.reportDate),
+            datasets: [
+                {
+                    label: "Confirmed",
+                    data: chartData.map(data => data.confirmed.total),
+                    borderColor: '#008cff',
+                    pointRadius: 0,
+                },
+                {
+                    label: "Deaths",
+                    data: chartData.map(data => data.deaths.total),
+                    borderColor: '#ff0000',
+                    pointRadius: 0,
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    })
+}
+
 const setInitialCards = async () => {
     let cardData = await fetchGlobalData();
 
@@ -103,10 +147,10 @@ const updateChart = (infections, deaths, recovered, date) => {
             ]
         },
         options: {
-            response: true,
+            responsive: true,
             maintainAspectRatio: false
         }
-    })
+    });
 }
 
 const fetchTimelineData = async (event) => {
@@ -139,6 +183,7 @@ select.addEventListener('change', fetchTimelineData)
 const initialLoad = () => {
     setOptions();
     setInitialCards();
+    setGlobalChart();
 }
 
 window.addEventListener("load", initialLoad);
