@@ -88,6 +88,9 @@ const fetchTimelineData = async (event) => {
     try {
         const response = await fetch(`${api}/v3/analytics/trend/country?countryCode=${event.target.value}&startDate=${startDate}&endDate=${endDate}`)
         const data = await response.json();
+        if (data == null) {
+            confirmedNumberCard.innerHTML = "loading"
+        }
         const infectionsData = data.map(item => item.total_confirmed);
         const deathData = data.map(item => item.total_deaths);
         const recoveredData = data.map(item => item.total_recovered);

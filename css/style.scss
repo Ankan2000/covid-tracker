@@ -164,4 +164,30 @@ $desktop: 840px;
     }
 }
 
+.news{
+    overflow: scroll;
+    margin: 1.6rem auto;
+    width: 95vw;
+    height: 300px;
+    border-radius: 1rem;
+    box-shadow: 0 1px 1px 1px rgba($color: #000000, $alpha: 0.5);
+
+    &__heading{
+        margin: 1rem 2rem;
+        text-align: center;
+    }
+
+    &__card{
+        width: 95%;
+        margin: 0.5rem auto;
+        padding: 0.5rem 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-decoration: none;
+        color: color(info-border);
+        background-color: color(info-bg);
+    }
+}
+
 
