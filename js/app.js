@@ -1,11 +1,12 @@
 import { CountUp } from "./countUp.min.js";
+import { updateChart, setGlobalChart } from "./chart.js";
+import { createNews } from "./news.js";
 
 const select = document.querySelector("#countrySelector");
 const confirmedNumberCard = document.querySelector("#confirmed");
 const recoveryNumberCard = document.querySelector("#recovery");
 const deathsNumberCard = document.querySelector("#deaths");
 const loader = document.querySelector(".line-loader");
-const chartBlock = document.querySelector("#visualChart").getContext("2d");
 
 const today = new Date();
 const currentMonth =
@@ -50,39 +51,6 @@ const fetchGlobalTimelineData = async () => {
   }
 };
 
-const setGlobalChart = async () => {
-  if (chart != undefined) {
-    chart.destroy();
-  }
-
-  const chartData = await fetchGlobalTimelineData();
-
-  chart = new Chart(chartBlock, {
-    type: "line",
-    data: {
-      labels: chartData.map((data) => data.reportDate),
-      datasets: [
-        {
-          label: "Confirmed",
-          data: chartData.map((data) => data.confirmed.total),
-          borderColor: "#008cff",
-          pointRadius: 0,
-        },
-        {
-          label: "Deaths",
-          data: chartData.map((data) => data.deaths.total),
-          borderColor: "#ff0000",
-          pointRadius: 0,
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-    },
-  });
-};
-
 const setGlobalCards = async () => {
   let cardData = await fetchGlobalData();
 
@@ -118,43 +86,6 @@ const updateCards = (confirmed, deaths, recovered) => {
   countUp.start();
 };
 
-const updateChart = (infections, deaths, recovered, date) => {
-  if (chart != undefined) {
-    chart.destroy();
-  }
-
-  chart = new Chart(chartBlock, {
-    type: "line",
-    data: {
-      labels: date,
-      datasets: [
-        {
-          label: "Confirmed",
-          data: infections,
-          borderColor: "#008cff",
-          pointRadius: 0,
-        },
-        {
-          label: "Recovered",
-          data: recovered,
-          borderColor: "#25aa00",
-          pointRadius: 0,
-        },
-        {
-          label: "Deaths",
-          data: deaths,
-          borderColor: "#ff0000",
-          pointRadius: 0,
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-    },
-  });
-};
-
 const fetchTimelineData = async (event) => {
   try {
     loader.classList.add("loading");
@@ -177,10 +108,11 @@ const fetchTimelineData = async (event) => {
     const totalConfirmed = infectionsData[infectionsData.length - 1];
     const totalDeaths = deathData[deathData.length - 1];
     const totalRecovered = recoveredData[recoveredData.length - 1];
+    const chartData = await fetchGlobalTimelineData();
 
     if (countryCode === "global") {
       setGlobalCards();
-      setGlobalChart();
+      setGlobalChart(chartData);
     } else {
       updateChart(infectionsData, deathData, recoveredData, date);
     }
@@ -192,10 +124,23 @@ const fetchTimelineData = async (event) => {
 
 select.addEventListener("change", fetchTimelineData);
 
-const initialLoad = () => {
+const fetchGlobalNews = async () => {
+  const response = await fetch(`${api}/news/trending?limit=10`);
+  const data = await response.json();
+  return data.items;
+};
+
+const initialLoad = async () => {
+  const chartData = await fetchGlobalTimelineData();
+
   setOptions();
   setGlobalCards();
-  setGlobalChart();
+  setGlobalChart(chartData);
+  const newsData = await fetchGlobalNews();
+  // console.log(newsData);
+  newsData.forEach((item) => {
+    createNews(item.url, item.urlToImage, item.title);
+  });
 };
 
 window.addEventListener("load", initialLoad);
