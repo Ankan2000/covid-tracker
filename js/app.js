@@ -18,7 +18,7 @@ const endDate =
 
 const api = "https://api.coronatracker.com";
 
-let chart, countUp;
+let countUp;
 
 const fetchOptions = async () => {
   try {
@@ -139,7 +139,13 @@ const initialLoad = async () => {
   const newsData = await fetchGlobalNews();
   // console.log(newsData);
   newsData.forEach((item) => {
-    createNews(item.url, item.urlToImage, item.title);
+    createNews(
+      item.url,
+      item.urlToImage,
+      item.title,
+      item.description,
+      item.publishedAt
+    );
   });
 };
 
