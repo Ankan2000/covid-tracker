@@ -248,8 +248,10 @@ li {
 
 .news__card {
   width: 95%;
+  max-height: 150px;
+  overflow-y: hidden;
   margin: 0.5rem auto;
-  padding: 0.5rem 1rem;
+  padding: 0.8rem 1rem;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -266,14 +268,19 @@ li {
   position: relative;
 }
 
+.news__details {
+  margin-bottom: 0.5rem;
+}
+
 .news__time {
   position: absolute;
-  bottom: 0.5rem;
-  right: 0.5rem;
+  bottom: 0.2rem;
+  right: 0.2rem;
   color: #c07d00;
 }
 
 .news__title {
   font-weight: bold;
+  margin-bottom: 0.5rem;
 }
 /*# sourceMappingURL=style.css.map */
